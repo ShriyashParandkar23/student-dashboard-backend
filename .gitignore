@@ -1,0 +1,28 @@
+# Node.js dependencies
+node_modules/
+
+# Environment variables (secrets like DB passwords etc.)
+.env
+
+# pnpm lock file (optional, depending on project need)
+pnpm-lock.yaml
+
+# System files
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Operating System files
+Thumbs.db
