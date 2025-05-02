@@ -57,7 +57,7 @@ const signin = async (req, res) => {
         admin.isLoggedIn = true;
         await admin.save();
 
-        res.json({ isAdminLoggedIn: true, message: "Login successful" });
+        res.json({ isAdminLoggedIn: true, message: "Login successful", adminDetails: admin });
     } catch (error) {
         return res.status(500).json({ message: `Server error: ${error.message}` });
     }
@@ -155,27 +155,37 @@ const updateStudent = async (req, res) => {
 // Signup student
 const signupStudent = async (req, res) => {
     try {
-        const { name, password, user_id, course, email, phoneNumber, division, birthDate, linkedIn, gitHub } = req.body;
+        const {
+            name,
+            password,
+            user_id,
+            course,
+            email,
+            phoneNumber,
+            division,
+            birthDate,
+            linkedIn,
+            gitHub,
+            overallAttendance,
+            createdByadmin,
+            marks // <-- include this
+        } = req.body;
 
-        // Check if the required fields are provided
         if (!name || !user_id || !course) {
             return res.status(400).json({ message: "Name, user_id, and course are required." });
         }
 
-        // Check if the student already exists based on user_id
         const existingStudent = await Student.findOne({ user_id });
         if (existingStudent) {
             return res.status(400).json({ message: "Student with this user_id already exists." });
         }
 
-        // Hash the password if provided
         let hashedPassword = '';
         if (password) {
             const salt = await bcrypt.genSalt(10);
             hashedPassword = await bcrypt.hash(password, salt);
         }
 
-        // Create a new student document with optional fields
         const newStudent = new Student({
             name,
             user_id,
@@ -187,15 +197,13 @@ const signupStudent = async (req, res) => {
             linkedIn,
             gitHub,
             password: hashedPassword || '',
-            overallAttendance: "0%",  // Default value
-            createdByadmin: req.body.createdByadmin || 'admin',  // Admin who creates the student
-            marks: {}  // Initialize marks as an empty object
+            overallAttendance: overallAttendance ? `${overallAttendance}%` : "0%",
+            createdByadmin: createdByadmin || 'admin',
+            marks: marks || {}
         });
 
-        // Save the student to the database
         await newStudent.save();
 
-        // Respond with the student data excluding password
         return res.status(201).json({
             message: "Student created successfully",
             student: {
