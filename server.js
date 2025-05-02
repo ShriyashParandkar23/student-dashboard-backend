@@ -34,7 +34,7 @@ app.get('/',(req,res)=>{
     res.json({msg:'Server working fine'})
 })
 
-app.use("/api", studentRoutes);
+app.use("/student", studentRoutes);
 app.use('/admin', adminRoutes);
 
 

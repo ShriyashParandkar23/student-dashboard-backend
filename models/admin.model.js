@@ -1,4 +1,3 @@
-// models/admin.model.js
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
@@ -11,29 +10,19 @@ const AdminSchema = new Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    enum: ['admin', 'staff'],
-    required: true,
-    default: 'admin',
-  },
-  permissions: {
-    type: [String],
-    enum: ['manage_students', 'manage_marks', 'manage_tests'],
-    required: true,
-    default: ['manage_students', 'manage_marks', 'manage_tests'],
-  },
-  lastLogin: {
-    type: Date,
-    default: Date.now,
+  isLoggedIn: { 
+    type: Boolean, 
+    default: false 
   },
   user_id: {
-    type: String,
+    type: String,  // This can be changed to Number if you want numeric IDs.
     required: true,
   },
+  role: {
+    type: String,
+    default: 'admin'
+  }
 }, { timestamps: true });
-
-
 
 const Admin = model('Admin', AdminSchema);
 

@@ -1,0 +1,178 @@
+{
+  "collection": {
+    "info": {
+      "_postman_id": "2e6ea13c-c984-42ae-a08f-2751ac3ec753",
+      "name": "MERN-TP",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "updatedAt": "2025-04-28T11:26:52.000Z",
+      "createdAt": "2025-04-28T05:18:09.000Z",
+      "lastUpdatedBy": "11490594",
+      "uid": "11490594-2e6ea13c-c984-42ae-a08f-2751ac3ec753"
+    },
+    "item": [
+      {
+        "name": "Admin URLS",
+        "item": [
+          {
+            "name": "Admin SignUp",
+            "id": "e6623130-6820-4a2a-adf0-24bd53cef519",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "auth": { "type": "noauth" },
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"John Doe\",\n  \"password\": \"adminpassword\",\n  \"user_id\": \"admin123\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/admin/signup",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "8000",
+                "path": ["admin", "signup"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-e6623130-6820-4a2a-adf0-24bd53cef519"
+          },
+          {
+            "name": "Get All Admin Details",
+            "id": "9d0871a3-6e32-402a-a31d-84ce35dafb73",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/admin/admins",
+                "protocol": "https",
+                "host": ["student-dashboard-backend-a0yo", "onrender", "com"],
+                "path": ["admin", "admins"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-9d0871a3-6e32-402a-a31d-84ce35dafb73"
+          },
+          {
+            "name": "Admin Login",
+            "id": "07419fff-a022-4970-af36-22544195bcd7",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n           \"user_id\": \"admin123\", \n           \"password\": \"adminpassword\"\n         }",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/admin/signin",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "8000",
+                "path": ["admin", "signin"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-07419fff-a022-4970-af36-22544195bcd7"
+          }
+        ],
+        "id": "9d1c7660-6527-483b-9300-d79eccf8ce43",
+        "uid": "11490594-9d1c7660-6527-483b-9300-d79eccf8ce43"
+      },
+      {
+        "name": "Students",
+        "item": [
+          {
+            "name": "Delete Student by ID",
+            "id": "96b0ae20-68b5-4eef-83e0-747f3ac8b814",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "auth": { "type": "noauth" },
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/api/student/234234234",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "8000",
+                "path": ["api", "student", "234234234"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-96b0ae20-68b5-4eef-83e0-747f3ac8b814"
+          },
+          {
+            "name": "Get Student By ID",
+            "id": "eaedd137-5836-40ef-93d4-98ca913377bd",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "auth": { "type": "noauth" },
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/api/student/234234234",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "8000",
+                "path": ["api", "student", "234234234"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-eaedd137-5836-40ef-93d4-98ca913377bd"
+          },
+          {
+            "name": "Get All Students",
+            "id": "7bd5f598-bdec-41be-b89a-e0818ca530b7",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/api/students",
+                "protocol": "https",
+                "host": ["student-dashboard-backend-a0yo", "onrender", "com"],
+                "path": ["api", "students"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-7bd5f598-bdec-41be-b89a-e0818ca530b7"
+          },
+          {
+            "name": "Student_Login",
+            "id": "10604df8-d81e-4179-850b-d3b2745af314",
+            "protocolProfileBehavior": { "disableBodyPruning": true },
+            "request": {
+              "auth": { "type": "noauth" },
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"userID\": \"234234234\",\n  \"password\": \"admin\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "https://student-dashboard-backend-a0yo.onrender.com/api/student-login",
+                "protocol": "http",
+                "host": ["localhost"],
+                "port": "8000",
+                "path": ["api", "student-login"]
+              }
+            },
+            "response": [],
+            "uid": "11490594-10604df8-d81e-4179-850b-d3b2745af314"
+          }
+        ],
+        "id": "bf14dac9-aa35-4330-b61d-fbdbf1003a05",
+        "uid": "11490594-bf14dac9-aa35-4330-b61d-fbdbf1003a05"
+      }
+    ]
+  }
+}
