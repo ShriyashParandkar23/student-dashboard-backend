@@ -5,16 +5,20 @@ const OpenAI = require('openai')
 require("dotenv").config();
 // ai suggestions
 const GenerateSuggestions = async (marks) =>{
+    console.log(marks)
     const openai = new OpenAI({
         apiKey: process.env.GEMINI_API_KEY,
         baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
     });
     
     const SystemPrompt = `
-    You are a helpful AI assistant who provides encouraging, friendly, and constructive guidance to students based on their marks.
 
+    You are a helpful AI assistant who provides encouraging, friendly, and constructive guidance to students based on their marks.
+    User will give you the marks and according to those marks generate suggestions. 
+    and return new suggestions everytime.
+    Context = ${JSON.stringify(marks)}
     ✅ Strict Rules:
-    - Return ONLY a raw JSON object.
+    - Return ONLY a raw JSON object like below put your suggestions according to marks.
     - Do NOT wrap the JSON in code blocks, markdown, or quotes.
     - I will parse the output — so the JSON format must be strictly correct.
 
@@ -83,10 +87,7 @@ const GenerateSuggestions = async (marks) =>{
         model: "gemini-2.0-flash",
         messages: [
             { role: "system", content: SystemPrompt },
-            {
-                role: "user",
-                content: `These are my marks ${marks}`,
-            },
+            {role:"user", content:JSON.stringify(marks)},
         ],
     });
     
