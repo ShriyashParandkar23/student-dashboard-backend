@@ -8,5 +8,6 @@ router.get("/", studentController.getAllStudents);
 router.get("/:id", studentController.getStudentById);
 router.delete("/delete/:id", studentController.deleteStudentById);
 router.post("/ai_suggestion",studentController.aiSuggestionsAPI)
+router.post("/ai_questions",studentController.getQuizQuestions)
 
 module.exports = router;

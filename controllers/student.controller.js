@@ -4,13 +4,15 @@ const OpenAI = require('openai')
 
 require("dotenv").config();
 // ai suggestions
+
+const openai = new OpenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+});
+
 const GenerateSuggestions = async (marks) =>{
     console.log(marks)
-    const openai = new OpenAI({
-        apiKey: process.env.GEMINI_API_KEY,
-        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
-    });
-    
+
     const SystemPrompt = `
 
     You are a helpful AI assistant who provides encouraging, friendly, and constructive guidance to students based on their marks.
@@ -96,8 +98,70 @@ const GenerateSuggestions = async (marks) =>{
 }
 
 
+const GenerateQuestionAnswers = async() =>{
+    const SystemPrompt =     `
 
+    You are an helpful AI Assistant who can generate question on specific subjects and answer and options as well. 
+    and return the JSON Object as an output
+
+    Subjects are follows:
+    1. Programming in C
+    2. Computer Networking
+    3. Signals and System
+    4. MicroProcessor
+
+    Strict Rules:
+    Output should be in JSON String Format Only!
+    User wants to use JSON.parse() function on your output.
+
+    OUTPUT: Question JSON Object For Example is given below 
+    {
+    "Programming in C": [
+      { question: "What is a pointer?", options: ["Variable", "Function", "Reference", "Address holder"], answer: "Address holder" },
+      { question: "Which loop is entry-controlled?", options: ["for", "do-while", "while", "switch"], answer: "for" },
+      { question: "Which is used for dynamic memory?", options: ["malloc", "alloca", "new", "free"], answer: "malloc" },
+    ],
+    "Computer Networking": [
+      { question: "What is IP?", options: ["Internet Protocol", "Internal Program", "Input Process", "Interface Protocol"], answer: "Internet Protocol" },
+      { question: "What does HTTP stand for?", options: ["HyperText Transfer Protocol", "Hyperlink Transfer Protocol", "High Transfer Text Protocol", "HyperText Translate Protocol"], answer: "HyperText Transfer Protocol" },
+      { question: "Which layer handles routing?", options: ["Transport", "Network", "Session", "Data Link"], answer: "Network" },
+    ],
+    "Signals and System": [
+      { question: "What is a signal?", options: ["Physical quantity", "Mathematical function", "Voltage", "All of these"], answer: "All of these" },
+      { question: "What is sampling?", options: ["Signal replication", "Taking snapshots", "Signal addition", "Noise reduction"], answer: "Taking snapshots" },
+      { question: "Which transform is used for continuous time?", options: ["Laplace", "Fourier", "Z-transform", "None"], answer: "Laplace" },
+    ],
+    "MicroProcessor": [
+      { question: "Which is a microprocessor?", options: ["8085", "8051", "555", "741"], answer: "8085" },
+      { question: "What is the size of an opcode?", options: ["4 bits", "8 bits", "16 bits", "Varies"], answer: "Varies" },
+      { question: "Which register stores the address of next instruction?", options: ["SP", "PC", "IR", "MAR"], answer: "PC" },
+    ],
+  };`
+
+  const response = await openai.chat.completions.create({
+    model: "gemini-2.0-flash",
+    messages: [
+        { role: "system", content: SystemPrompt },
+        {role:"user", content:'Give me Question Answer JSON Object'},
+    ],
+});
+    const final_response = response.choices[0].message.content
+    // console.log(final_response);
+    const cleanedString = final_response.replace(/^```json\n/, '').replace(/\n```$/, '');
+    // console.log(cleanedString)
+
+    return cleanedString
+
+}
+
+// GenerateQuestionAnswers()
 // ======================
+
+const getQuizQuestions = async(req,res) =>{
+    
+    const response = await GenerateQuestionAnswers()
+    return res.status(200).json(JSON.parse(response))
+}
 
 
 // Signup student
@@ -232,5 +296,6 @@ module.exports = {
     getAllStudents,
     getStudentById,
     deleteStudentById,
-    aiSuggestionsAPI
+    aiSuggestionsAPI,
+    getQuizQuestions
 };
