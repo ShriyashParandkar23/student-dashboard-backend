@@ -14,7 +14,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
-const Student = require('./models/student.model')
 
 // db-connection start =================================
 mongoose.connect(process.env.MONGO_URI, {
@@ -35,6 +34,7 @@ app.get('/',(req,res)=>{
 })
 
 app.use("/student", studentRoutes);
+
 app.use('/admin', adminRoutes);
 
 

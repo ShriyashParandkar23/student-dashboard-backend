@@ -1,5 +1,103 @@
 const Student = require("../models/student.model");
 const bcrypt = require("bcryptjs");
+const OpenAI = require('openai')
+
+require("dotenv").config();
+// ai suggestions
+const GenerateSuggestions = async (marks) =>{
+    const openai = new OpenAI({
+        apiKey: process.env.GEMINI_API_KEY,
+        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+    });
+    
+    const SystemPrompt = `
+    You are a helpful AI assistant who provides encouraging, friendly, and constructive guidance to students based on their marks.
+
+    ✅ Strict Rules:
+    - Return ONLY a raw JSON object.
+    - Do NOT wrap the JSON in code blocks, markdown, or quotes.
+    - I will parse the output — so the JSON format must be strictly correct.
+
+    ✅ JSON Schema:
+    {
+      "Suggestions": {
+        "<subject_name>": "<suggestion_text>",
+        ...
+      }
+    }
+
+    ✅ Example Input:
+    {
+      "Programming in C": {
+        "pt1": 78,
+        "pt2": 80,
+        "pt3": 82,
+        "pt4": 84,
+        "attendance": "86%"
+      },
+      "Computer Networking": {
+        "pt1": 75,
+        "pt2": 78,
+        "pt3": 80,
+        "pt4": 82,
+        "attendance": "84%"
+      },
+      "Signals and System": {
+        "pt1": 79,
+        "pt2": 81,
+        "pt3": 83,
+        "pt4": 85,
+        "attendance": "86%"
+      },
+      "MicroProcessor": {
+        "pt1": 82,
+        "pt2": 84,
+        "pt3": 86,
+        "pt4": 88,
+        "attendance": "89%"
+      }
+    }
+
+    ✅ Example Output:
+    {
+      "Suggestions": {
+        "Programming in C": "You have shown good progress! Keep practicing loops and arrays to strengthen your coding.",
+        "Computer Networking": "You’re doing well, but focus on understanding the OSI model and network layers.",
+        "Signals and System": "Great effort! Review signal transformations to boost your score further.",
+        "MicroProcessor": "Excellent performance! Try reading up on advanced microprocessor concepts."
+      }
+    }
+
+    ✅ If marks are missing or empty:
+    {
+      "Suggestions": {
+        "Programming in C": "You need to submit marks to get AI suggestions.",
+        "Computer Networking": "You need to submit marks to get AI suggestions.",
+        "Signals and System": "You need to submit marks to get AI suggestions.",
+        "MicroProcessor": "You need to submit marks to get AI suggestions."
+      }
+    }
+    `;
+    
+    const response = await openai.chat.completions.create({
+        model: "gemini-2.0-flash",
+        messages: [
+            { role: "system", content: SystemPrompt },
+            {
+                role: "user",
+                content: `These are my marks ${marks}`,
+            },
+        ],
+    });
+    
+    console.log(response.choices[0].message);
+    return response.choices[0].message.content
+}
+
+
+
+// ======================
+
 
 // Signup student
 const signupStudent = async (req, res) => {
@@ -34,6 +132,21 @@ const signupStudent = async (req, res) => {
     }
 };
 
+const aiSuggestionsAPI = async(req,res) =>{
+    const {marks} = req.body 
+    const aiSuggestions = await GenerateSuggestions(marks);
+    const cleanedString = aiSuggestions.replace(/^```json\n/, '').replace(/\n```$/, '');
+    // console.log(cleanedString)
+    try{
+        const response = JSON.parse(cleanedString)
+        res.send(response)
+
+    }catch(error){
+        res.send({error:'Error while parsing'})
+    }
+
+}
+
 // Login student
 const loginStudent = async (req, res) => {
     try {
@@ -59,11 +172,16 @@ const loginStudent = async (req, res) => {
         // Convert to object and remove password before sending
         const studentData = student.toObject();
         delete studentData.password;
-
+        studentData.marks = Object.fromEntries(studentData.marks);
+        const aiSuggestions = await GenerateSuggestions(studentData.marks);
+        const cleanedString = aiSuggestions.replace(/^```json\n/, '').replace(/\n```$/, '');
+        // console.log(cleanedString)
+        studentData.ai_suggestions = JSON.parse(cleanedString)
         res.json({
             isStudentLoggedIn: true,
             message: "Login successful",
-            UserData: studentData
+            UserData: studentData,
+            marks:studentData.marks,
         });
     } catch (error) {
         return res.status(500).json({ message: `Server error: ${error.message}` });
@@ -112,5 +230,6 @@ module.exports = {
     loginStudent,
     getAllStudents,
     getStudentById,
-    deleteStudentById
+    deleteStudentById,
+    aiSuggestionsAPI
 };
